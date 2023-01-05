@@ -1,11 +1,12 @@
 package com.Api.apiSpring.services;
 
+import com.Api.apiSpring.Errors.RepeatFoundException;
 import com.Api.apiSpring.models.User;
 import com.Api.apiSpring.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -16,20 +17,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        var userFound = this.userRepo.findAll(
-
-        );
-        System.out.println(userFound);
+        var findUserReg = userRepo.findById(user.cc);
+        if (findUserReg.isPresent()){
+            throw new RepeatFoundException(user.cc);
+        }
         return userRepo.save(user);
     }
-
 
     @Override
     public Optional<User> getUser(Long userId) {
         try {
             return userRepo.findById(userId);
         }  catch (Exception e) {
-            throw new Error(e.getMessage());
+            return Optional.empty();
         }
     }
 

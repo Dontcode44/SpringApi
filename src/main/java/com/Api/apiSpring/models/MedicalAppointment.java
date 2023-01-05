@@ -19,8 +19,11 @@ public class MedicalAppointment {
     @Column(length = 10)
     private String Specialty;
     @OneToOne
-    @JoinColumn(name = "patient_id", updatable = false, nullable = false)
-    private User patient;
+    @JoinColumn(name = "patient_id", updatable = false, nullable = false, unique = true)
+    public User patient;
+
+    @Column(nullable = false, unique = true)
+    public Long PatientId;
 
     @Column(name = "Type_user")
     @Enumerated(value = EnumType.STRING)
